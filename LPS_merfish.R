@@ -143,15 +143,6 @@ for(i in label.gene){
   micro.diff$label[micro.diff$gene == i] = i
 }
 
-p1 = ggplot(micro.diff,aes(x = diff, y = avg_log2FC,color = sig,label = label))+
-  geom_point()+
-  geom_text_repel(data = micro.diff[micro.diff$label != "",],color = "grey3",max.overlaps = 1000)+
-  scale_color_manual(breaks = c("up","non","down"),values = c( "#CC0C0099","grey66","#5C88DA99"))+
-  xlab("Expression ratio fifferance")+
-  geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "grey50") +
-  theme_classic()
-ggsave("/Users/ruoqing/Projects/sfo/fig_sn_merfish/lpsvsctrl.pdf",p1,width = 6,height = 5)
 
 saveRDS(lps_ctrl.mac_micro.qc,"/Volumes/SFO/The_SFO_project/data/processed/lps_ctrl_mac_micro_qc.rds")
 saveRDS(micro.diff,"/Volumes/SFO/The_SFO_project/data/interim/micro_diff_lps_ctrl.rds")
@@ -197,19 +188,6 @@ tmp = tmp[rownames(lps_ctrl.mac_micro.qc@meta.data),]
 lps_ctrl.mac_micro.qc@meta.data$x = tmp$x
 lps_ctrl.mac_micro.qc@meta.data$y = tmp$y
 
-for (i in c("sfo2r3","sfo2r6","sfo4r3","sfo4r6","s5r3","s5r4","s5r5")){
-p1 = ggplot()+
-  geom_point(data = m3.merfish.ctrl_lps.seurat@meta.data[m3.merfish.ctrl_lps.seurat@meta.data$sample == i,],aes(x = x, y = y),color = "grey88",size = 0.4)+
-  geom_point(data = lps_ctrl.mac_micro.qc@meta.data[lps_ctrl.mac_micro.qc@meta.data$sample == i,],aes(x = x, y = y, color = Stress_Score1),size = 0.4)+xlab("")+ylab("")+
-  scale_color_gradientn(colours = c( "grey90","grey90","blue","red"),values  = rescale(c(-2,  -0.8282041,0,1.7)),limits = c(-2, 1.7))+
-  theme_classic()+theme(legend.position = 'none')
-ggsave(paste0("/Users/ruoqing/Projects/sfo/fig_sn_merfish/str_micro/",i,".png"),p1,width = 6,height = 6,dpi = 300)
-p1 = ggplot()+
-  geom_point(data = m3.merfish.ctrl_lps.seurat@meta.data[m3.merfish.ctrl_lps.seurat@meta.data$sample == i,],aes(x = x, y = y),color = "grey88",size = 0.4)+
-  geom_point(data = lps_ctrl.mac_micro.qc@meta.data[lps_ctrl.mac_micro.qc@meta.data$sample == i,],aes(x = x, y = y, color = Stress_Score1),size = 0.4)+xlab("")+ylab("")+
-  scale_color_gradientn(colours = c( "grey90","grey90","blue","red"),values  = rescale(c(-2,  -0.8282041,0,1.7)),limits = c(-2, 1.7))+
-  theme_classic()
-ggsave(paste0("/Users/ruoqing/Projects/sfo/fig_sn_merfish/str_micro/",i,"_legend.pdf"),p1,width = 6,height = 6)
 }
 
 
@@ -356,11 +334,6 @@ tmp = banksy_pipeline(tmp,resolution = 0.2)
 colData(tmp)$region = as.character(colData(tmp)$clust_M1_lam0.8_k50_res0.2)
 colData(tmp)$cells = rownames(colData(tmp))
 
-p1 = ggplot(colData(tmp),aes(x = x,y = y, color = region))+geom_point()+theme_classic()
-p2 = ggplot(colData(tmp)[colData(tmp)$region %in% c(4),],aes(x = x,y = y, color = region))+geom_point()+theme_classic()
-
-p1+p2
-
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.2 == 8] = "SFO"
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.2 == 1] = "CTX"
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.2 %in% c(5,6)] = "ventricular"
@@ -368,9 +341,6 @@ colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.2 %in% c(2)] = "fibro 
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.2 %in% c(3)] = "TH"
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.2 %in% c(7)] = "HY"
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.2 %in% c(4)] = "CNU"
-
-
-p1 = ggplot(colData(tmp)[colData(tmp)$clust_M1_lam0.8_k50_res0.2 %in% c(1,8,5),],aes(x = x,y = y, color = region))+geom_point()+theme_classic()
 
 saveRDS(tmp,paste0("/Volumes/SFO/MERFISHRes/cleanV2/banksyobo/",i,"_se_banksyed_anno.rds"))
 ############################################################################################
@@ -380,21 +350,12 @@ tmp = banksy_pipeline(tmp,resolution = 0.2)
 colData(tmp)$region = as.character(colData(tmp)$clust_M1_lam0.8_k50_res0.2)
 colData(tmp)$cells = rownames(colData(tmp))
 
-p1 = ggplot(colData(tmp),aes(x = x,y = y, color = region))+geom_point()+theme_classic()
-p2 = ggplot(colData(tmp)[colData(tmp)$region %in% c(7),],aes(x = x,y = y, color = region))+geom_point()+theme_classic()
-
-p1+p2
-
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.2 == 7] = "SFO"
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.2 == 1] = "CTX"
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.2 %in% c(3)] = "ventricular"
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.2 %in% c(5)] = "CNU"
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.2 %in% c(2)] = "fibro track"
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.2 %in% c(4,6)] = "TH"
-
-p1 = ggplot(colData(tmp)[colData(tmp)$region %in% c("ventricular"),],aes(x = x,y = y, color = region))+geom_point()+theme_classic()
-
-colData(tmp)$region[colData(tmp)$cells %in% CellSelector(p1)] = "fibro track"
 
 saveRDS(tmp,paste0("/Volumes/SFO/MERFISHRes/cleanV2/banksyobo/",i,"_se_banksyed_anno.rds"))
 ############################################################################################
@@ -404,10 +365,6 @@ tmp = banksy_pipeline(tmp,resolution = 0.5)
 colData(tmp)$region = as.character(colData(tmp)$clust_M1_lam0.8_k50_res0.5)
 colData(tmp)$cells = rownames(colData(tmp))
 
-p1 = ggplot(colData(tmp),aes(x = x,y = y, color = region))+geom_point()+theme_classic()
-p2 = ggplot(colData(tmp)[colData(tmp)$region %in% c(10,13,15),],aes(x = x,y = y, color = region))+geom_point()+theme_classic()
-
-p1+p2
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.5 %in% c(1,11,10)] = "fibro track"
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.5 %in% c(3,4,15,13)] = "CTX"
 colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.5 %in% c(9)] = "CNU"
@@ -417,63 +374,7 @@ colData(tmp)$region[colData(tmp)$clust_M1_lam0.8_k50_res0.5 %in% c(2,7)] = "TH"
 
 saveRDS(tmp,paste0("/Volumes/SFO/MERFISHRes/cleanV2/banksyobo/",i,"_se_banksyed_anno.rds"))
 
-#################################################################################################
-i = "s5r5"
-tmp = readRDS(paste0("/Volumes/SFO/MERFISHRes/cleanV2/banksyobo/",i,"_se_banksyed_anno.rds"))
 
-p2 = ggplot(colData(tmp),aes(x = x,y = y, color = region))+geom_point()+theme_classic() 
-s = colData(tmp)[colData(tmp)$cells %in% CellSelector(p2),]
-
-ggplot(s,aes(x = x,y = y, color = region))+geom_point()+theme_classic()
-plot(s$x, s$y, pch=16, cex=0.3, asp=1)
-poly <- locator(type = "l")
-
-
-inside <- sp::point.in.polygon(s$x, s$y, poly$x, poly$y) > 0
-selected_cells <- s$cells[inside]
-
-ggplot(s[s$cells %in% selected_cells,],aes(x = x,y = y, color = region))+geom_point()+theme_classic()
-
-colData(tmp)$region[colData(tmp)$cells %in% selected_cells] = "SFO"
-saveRDS(tmp,paste0("/Volumes/SFO/MERFISHRes/cleanV2/banksyobo/",i,"_se_banksyed_anno.rds"))
-
-#################################################################################################
-i = "s5r4"
-tmp = readRDS(paste0("/Volumes/SFO/MERFISHRes/cleanV2/banksyobo/",i,"_se_banksyed_anno.rds"))
-
-p2 = ggplot(colData(tmp),aes(x = x,y = y, color = region))+geom_point()+theme_classic() 
-s = colData(tmp)[colData(tmp)$cells %in% CellSelector(p2),]
-
-ggplot(s,aes(x = x,y = y, color = region))+geom_point()+theme_classic()
-plot(s$x, s$y, pch=16, cex=0.3, asp=1)
-poly <- locator(type = "l")
-
-inside <- sp::point.in.polygon(s$x, s$y, poly$x, poly$y) > 0
-selected_cells <- s$cells[inside]
-
-ggplot(s[s$cells %in% selected_cells,],aes(x = x,y = y, color = region))+geom_point()+theme_classic()
-
-colData(tmp)$region[colData(tmp)$cells %in% selected_cells] = "SFO"
-saveRDS(tmp,paste0("/Volumes/SFO/MERFISHRes/cleanV2/banksyobo/",i,"_se_banksyed_anno.rds"))
-
-#################################################################################################
-i = "s5r3"
-tmp = readRDS(paste0("/Volumes/SFO/MERFISHRes/cleanV2/banksyobo/",i,"_se_banksyed_anno.rds"))
-
-p2 = ggplot(colData(tmp),aes(x = x,y = y, color = region))+geom_point()+theme_classic() 
-s = colData(tmp)[colData(tmp)$cells %in% CellSelector(p2),]
-
-ggplot(s,aes(x = x,y = y, color = region))+geom_point()+theme_classic()
-plot(s$x, s$y, pch=16, cex=0.3, asp=1)
-poly <- locator(type = "l")
-
-inside <- sp::point.in.polygon(s$x, s$y, poly$x, poly$y) > 0
-selected_cells <- s$cells[inside]
-
-ggplot(s[s$cells %in% selected_cells,],aes(x = x,y = y, color = region))+geom_point()+theme_classic()
-
-colData(tmp)$region[colData(tmp)$cells %in% selected_cells] = "SFO"
-saveRDS(tmp,paste0("/Volumes/SFO/MERFISHRes/cleanV2/banksyobo/",i,"_se_banksyed_anno.rds"))
 
 keep.section = c("s5r3","s5r4","s5r5")
 coldata.merge = data.frame()
@@ -504,156 +405,14 @@ for (i in unique(sfo.merfish.qc.keep.update@meta.data$region_new_cc)){
   m3.merfish.ctrl_lps.seurat@meta.data$region_new_cc[m3.merfish.ctrl_lps.seurat@meta.data$cell %in% sfo.merfish.qc.keep.update@meta.data$cell[sfo.merfish.qc.keep.update@meta.data$region_new_cc == i]] = i
 }
 
-unique(sfo.merfish.qc.keep.update@meta.data$region_new_cc[sfo.merfish.qc.keep.update@meta.data$sample == "sfo2r6"])
-
-sfo.cross.banksy.color = c("#a14462","#356d67","#b0d45d","#ffe788","#9e6c69","#5066a1","#e8743c","#ffc556","#9269bf","cyan4")
-names(sfo.cross.banksy.color) = c("SFO","HPF","CNU","fibro track","CTX","TH","ventricular","HY","cc","fimbria")
-
-setdiff(unique(m3.merfish.ctrl_lps.seurat@meta.data$region_new_cc),names(sfo.cross.banksy.color))
-
-tmp = m3.merfish.ctrl_lps.seurat@meta.data
-r = 2500
-
-for (i in c("s5r3","s5r4","s5r5")){
-  s = tmp[tmp$sample == i,]
-  mean_x = mean(s$x)
-  mean_y = mean(s$y)
-  min_x = mean_x-r
-  max_x = mean_x+r
-  min_y = mean_y-r
-  max_y = mean_y+r
-  tmp.coord = matrix(0,ncol = 2,nrow = 4)
-  colnames(tmp.coord) = c("x","y")
-  tmp.coord = as.data.frame(tmp.coord)
-  tmp.coord[1,] = c(min_x,min_y)
-  tmp.coord[2,] = c(min_x,max_y)
-  tmp.coord[3,] = c(max_x,min_y)
-  tmp.coord[4,] = c(max_x,max_y)
-  p1 = ggplot()+
-    geom_point(data = tmp.coord,aes(x = x,y = y),color= "white")+
-    #    geom_point(data = s,aes(x = x,y = y),color= "grey88",size = 0.2)+
-    geom_point(data = s,aes(x = x,y = y,color= region_new_cc),size = 0.2)+
-    scale_color_manual(breaks = names(sfo.cross.banksy.color),values = sfo.cross.banksy.color)+
-    theme_classic()+theme(axis.title = element_blank(),
-                          axis.text.y = element_blank(),legend.position = 'none')
-  ggsave(paste0("/Users/ruoqing/Projects/sfo/fig_sn_merfish/lps/banksy2d/",i,"_wm.png"),p1,width = 6,height = 6,dpi = 300)
-}
-
-
-
-sfo.major.color.cross = c("#D3B256","#4182CB","#D78203","#BF99E2","#5F6164","#373F89","#4CBDA8","#90D4A4","#EFA9AE","#5066a1")
-names(sfo.major.color.cross) = c("Neuron","Oligo","Astro","Ependymal","CPEC","Micro","Endo","OPC","SFO","Mac")
-
-m3.merfish.ctrl_lps.seurat@meta.data$celltype[m3.merfish.ctrl_lps.seurat@meta.data$celltype %in% c("ependyma","Ependyma")] = "Ependymal"
-m3.merfish.ctrl_lps.seurat@meta.data$celltype[m3.merfish.ctrl_lps.seurat@meta.data$celltype %in% c("Chp")] = "CPEC"
-
-Idents(m3.merfish.ctrl_lps.seurat) = "celltype"
-p1 = DimPlot(m3.merfish.ctrl_lps.seurat,cols = sfo.major.color.cross)+p.cleanumap+NoLegend()
-ggsave("/Users/ruoqing/Projects/sfo/fig_sn_merfish/lps/m3_lps_ctrl_umap.png",p1,width = 6,height = 4,dpi = 300)
-
-m3.merfish.ctrl_lps.seurat@meta.data[m3.merfish.ctrl_lps.seurat@meta.data$sample == "s5r5",]
-
-tmp = m3.merfish.ctrl_lps.seurat@meta.data
-r = 2500
-
-for (i in c("s5r3","s5r4","s5r5")){
-  s = tmp[tmp$sample == i,]
-  mean_x = mean(s$x)
-  mean_y = mean(s$y)
-  min_x = mean_x-r
-  max_x = mean_x+r
-  min_y = mean_y-r
-  max_y = mean_y+r
-  tmp.coord = matrix(0,ncol = 2,nrow = 4)
-  colnames(tmp.coord) = c("x","y")
-  tmp.coord = as.data.frame(tmp.coord)
-  tmp.coord[1,] = c(min_x,min_y)
-  tmp.coord[2,] = c(min_x,max_y)
-  tmp.coord[3,] = c(max_x,min_y)
-  tmp.coord[4,] = c(max_x,max_y)
-  p1 = ggplot()+
-    geom_point(data = tmp.coord,aes(x = x,y = y),color= "white")+
-    #    geom_point(data = s,aes(x = x,y = y),color= "grey88",size = 0.2)+
-    geom_point(data = s,aes(x = x,y = y,color= celltype),size = 0.2)+
-    scale_color_manual(breaks = names(sfo.major.color.cross),values = sfo.major.color.cross)+
-    theme_classic()+theme(axis.title = element_blank(),
-                          axis.text.y = element_blank(),legend.position = 'none')
-  ggsave(paste0("/Users/ruoqing/Projects/sfo/fig_sn_merfish/lps/sp2d/",i,"_wm.png"),p1,width = 6,height = 6,dpi = 300)
-}
-
 
 lps_ctrl.oligo.qc = readRDS("/Volumes/SFO/The_SFO_project/data/processed/lps_ctrl_oligo_qc.rds")
-
-DimPlot(lps_ctrl.oligo.qc)
-FeaturePlot(lps_ctrl.oligo.qc,"C4b")
-
-for(i in unique(m3.merfish.ctrl_lps.seurat@meta.data$region_new_cc)){
-  print(i)
-  lps_ctrl.oligo.qc@meta.data$region_new_cc[lps_ctrl.oligo.qc@meta.data$cell %in% m3.merfish.ctrl_lps.seurat@meta.data$cell[m3.merfish.ctrl_lps.seurat@meta.data$region_new_cc == i]] = i
-}
-
-lps_ctrl.oligo.qc@meta.data$condition = "ctrl"
-lps_ctrl.oligo.qc@meta.data$condition[lps_ctrl.oligo.qc@meta.data$sample %in% c("s5r3","s5r4","s5r5")] = "lps"
-
-tmp = lps_ctrl.oligo.qc@meta.data
-tmp$new = paste0(tmp$region_new_cc,"_",tmp$condition)
-
-s = tmp[tmp$new %in% c("cc_ctrl","cc_lps",
-                       "fimbria_ctrl","fimbria_lps",
-                       "SFO_ctrl","SFO_lps"),]
-s$new = factor(s$new,levels = c("cc_ctrl","cc_lps",
-                                "fimbria_ctrl","fimbria_lps",
-                                "SFO_ctrl","SFO_lps"),ordered = T)
-p1 = ggplot(s,aes(x = new, fill = oligo_sub))+
-  geom_bar(stat = "count",position = "fill")+
-  scale_fill_manual(breaks = names(merfish.oligo.sub.cols),values = merfish.oligo.sub.cols)+
-  theme_classic()+xlab("")+ylab("")
-ggsave("/Users/ruoqing/Projects/sfo/fig_sn_merfish/lps/region3_bar.pdf",p1,width = 6,height = 4)
-
-
 
 m3.merfish.ctrl_lps.seurat@meta.data$oligo_sub = "other"
 for (i in unique(lps_ctrl.oligo.qc@meta.data$oligo_sub)) {
   m3.merfish.ctrl_lps.seurat@meta.data$oligo_sub[m3.merfish.ctrl_lps.seurat@meta.data$cell %in% lps_ctrl.oligo.qc@meta.data$cell[lps_ctrl.oligo.qc@meta.data$oligo_sub == i]] = i
 }
 
-merfish.oligo.sub.cols<-c("#ea9c9d","#459943","#e8c559","#606f8a","#982b2b","#4387B5","grey66","darkred")
-names(merfish.oligo.sub.cols) = c("OPC","COP","MOL","ARO1","ARO2","IRO","other","STROL")
-
-p1 = DimPlot(lps_ctrl.oligo.qc,cols = merfish.oligo.sub.cols)+p.cleanumap+NoLegend()
-ggsave("/Users/ruoqing/Projects/sfo/fig_sn_merfish/lps/ctrl_lps_oligo_umap.png",p1,width = 6,height = 4)
-p1 = plot_umap_legend(merfish.oligo.sub.cols)
-ggsave("/Users/ruoqing/Projects/sfo/fig_sn_merfish/lps/ctrl_lps_oligo_umap_legend.pdf",p1,width = 6,height = 4)
-
-
-
-
-tmp = m3.merfish.ctrl_lps.seurat@meta.data[m3.merfish.ctrl_lps.seurat@meta.data$region_new_cc %in% c("cc","SFO","fimbria"),]
-r = 2000
-for (i in unique(m3.merfish.ctrl_lps.seurat@meta.data$sample)){
-  s = tmp[tmp$sample == i,]
-  mean_x = mean(s$x)
-  mean_y = mean(s$y)
-  min_x = mean_x-r
-  max_x = mean_x+r
-  min_y = mean_y-r
-  max_y = mean_y+r
-  tmp.coord = matrix(0,ncol = 2,nrow = 4)
-  colnames(tmp.coord) = c("x","y")
-  tmp.coord = as.data.frame(tmp.coord)
-  tmp.coord[1,] = c(min_x,min_y)
-  tmp.coord[2,] = c(min_x,max_y)
-  tmp.coord[3,] = c(max_x,min_y)
-  tmp.coord[4,] = c(max_x,max_y)
-  p1 = ggplot()+
-    geom_point(data = tmp.coord,aes(x = x,y = y),color= "white")+
-    geom_point(data = s,aes(x = x,y = y),color= "grey88",size = 0.2)+
-    geom_point(data = s[s$oligo_sub %in% c("COP","MOL","STROL"),],aes(x = x,y = y,color= oligo_sub),size = 0.2)+
-    scale_color_manual(breaks = names(merfish.oligo.sub.cols),values = merfish.oligo.sub.cols)+
-    theme_classic()+theme(axis.title = element_blank(),
-                          axis.text.y = element_blank(),legend.position = 'none')
-  ggsave(paste0("/Users/ruoqing/Projects/sfo/fig_sn_merfish/lps/",i,"_wm.png"),p1,width = 6,height = 6,dpi = 300)
-}
 
 lps_ctrl.mac_micro.qc = readRDS("/Volumes/SFO/The_SFO_project/data/processed/lps_ctrl_mac_micro_qc.rds")
 
